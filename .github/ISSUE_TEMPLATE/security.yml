@@ -1,0 +1,81 @@
+name: "🔒 Security"
+description: "보안 취약점 및 보안 관련 작업"
+labels: [ "🔒 security" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 보안 관련 이슈
+        보안 취약점 또는 보안 개선 작업에 대해 설명해주세요.
+        ⚠️ 민감한 정보는 포함하지 마세요.
+
+  - type: dropdown
+    attributes:
+      label: 🔒 보안 유형
+      description: 보안 이슈의 유형을 선택해주세요.
+      options:
+        - 취약점 발견
+        - 취약점 수정
+        - 보안 기능 추가
+        - 의존성 보안 업데이트
+        - 인증/인가 개선
+        - 기타
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: 🔥 심각도
+      description: 보안 이슈의 심각도를 선택해주세요.
+      options:
+        - 낮음 (정보 노출 위험 낮음)
+        - 중간 (제한적 영향)
+        - 높음 (중요 데이터 접근 가능)
+        - 치명적 (시스템 전체 영향)
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 📄 설명
+      description: 보안 이슈에 대해 설명해주세요. 민감한 정보는 제외해주세요.
+      placeholder: "어떤 보안 이슈인지 설명해주세요."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 🎯 영향 범위
+      description: 이 이슈가 영향을 미치는 범위를 설명해주세요.
+      placeholder: "영향 받는 기능, 모듈, 사용자 범위 등"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: ✅ 작업 내용
+      description: 작업할 내용을 체크박스 형태로 작성해주세요.
+      value: |
+        - [ ] 취약점 분석
+        - [ ] 수정 방안 검토
+        - [ ] 코드 수정
+        - [ ] 보안 테스트
+        - [ ] 코드 리뷰
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 🛡️ 해결 방안
+      description: 해결 방안이 있다면 작성해주세요.
+      placeholder: "어떻게 해결할 예정인지 설명해주세요."
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: 🙋🏻 참고 자료
+      description: 참고 자료가 있다면 작성해주세요.
+      placeholder: "CVE 번호, 보안 권고 문서, 관련 아티클 등"
+    validations:
+      required: false

@@ -1,0 +1,50 @@
+name: "📝 Docs"
+description: "문서 작성 및 수정"
+labels: [ "📝 docs" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 문서 작업
+        문서 작성 또는 수정에 대해 설명해주세요.
+
+  - type: dropdown
+    attributes:
+      label: 📂 문서 유형
+      description: 문서의 유형을 선택해주세요.
+      options:
+        - README
+        - API 문서
+        - 아키텍처 문서
+        - 가이드/튜토리얼
+        - 주석/코드 문서화
+        - 기타
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 📄 설명
+      description: 어떤 문서 작업인지 설명해주세요.
+      placeholder: "새로운 문서 작성, 기존 문서 수정, 오타 수정 등"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: ✅ 작업 내용
+      description: 작업할 내용을 체크박스 형태로 작성해주세요.
+      value: |
+        - [ ] 문서 초안 작성
+        - [ ] 내용 검토
+        - [ ] 최종 수정
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 🙋🏻 참고 자료
+      description: 참고할 자료가 있다면 작성해주세요.
+      placeholder: "관련 문서 링크, 레퍼런스 등"
+    validations:
+      required: false
