@@ -17,16 +17,10 @@ reviews:
 
   path_filters:
     - "!**/README.md"
-    - "!**/**.json"
     - "!**/build/**"
     - "!**/generated/**"
-    - "!**/node_modules/**"
-    - "!**/dist/**"
     - "!**/.gradle/**"
     - "!**/src/main/resources/static/docs/**"
-    - "!**/*.min.js"
-    - "!**/*.min.css"
-    - "!**/pnpm-lock.yaml"
 
   path_instructions:
     # SQL Rules
@@ -149,31 +143,6 @@ reviews:
       instructions: |
         - Check for potential dependency version conflicts
         - Review module dependency directions
-
-    # React/TypeScript
-    - path: "**/*.tsx"
-      instructions: |
-        - Verify proper use of React hooks (dependency arrays, cleanup)
-        - Check for potential memory leaks in useEffect
-        - Review component prop types
-        - Avoid inline function definitions in JSX where performance matters
-
-    - path: "**/*.ts"
-      instructions: |
-        - Verify TypeScript strict mode compliance
-        - Check for proper type definitions (avoid 'any')
-        - Review null/undefined handling
-
-    - path: "**/components/**/*.tsx"
-      instructions: |
-        - Verify component naming follows PascalCase
-        - Check for proper separation of concerns
-        - Review accessibility (a11y) considerations
-
-    - path: "**/hooks/**/*.ts"
-      instructions: |
-        - Verify custom hook naming starts with 'use'
-        - Check for proper memoization (useMemo, useCallback)
 
   auto_review:
     enabled: true
