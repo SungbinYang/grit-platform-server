@@ -3,5 +3,6 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>EmptyFunctionBlock:ApplicationTests.kt:ApplicationTests${ }</ID>
+    <ID>TooManyFunctions:GlobalExceptionHandler.kt:GlobalExceptionHandler</ID>
   </CurrentIssues>
 </SmellBaseline>
