@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15.15
+    container_name: grit-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: grit
+      POSTGRES_USER: grit
+      POSTGRES_PASSWORD: grit
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data: {}
