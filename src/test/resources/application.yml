@@ -20,3 +20,10 @@ logging:
     im.grit: info
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
+app:
+  security:
+    allowed-origins:
+      - http://localhost:3000
+    cors:
+      max-age: 3600
+    password-pepper: test-pepper-for-testing-only
