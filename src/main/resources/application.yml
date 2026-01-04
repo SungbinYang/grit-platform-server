@@ -11,8 +11,8 @@ logging:
   level:
     root: info
     im.grit: info
-    org.hibernate.SQL: debug
-    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.SQL: off
+    org.hibernate.orm.jdbc.bind: off
 
 ---
 spring:
@@ -37,6 +37,8 @@ spring:
 logging:
   level:
     im.grit: debug
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
 
 ---
 spring:
@@ -60,8 +62,3 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-logging:
-  level:
-    im.grit: info
-    org.hibernate.SQL: off
-    org.hibernate.orm.jdbc.bind: off
