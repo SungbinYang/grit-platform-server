@@ -3,6 +3,7 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>EmptyFunctionBlock:ApplicationTests.kt:ApplicationTests${ }</ID>
+    <ID>ReturnCount:GlobalExceptionHandler.kt:GlobalExceptionHandler$@ExceptionHandler(SQLException::class) fun handleSQLException( e: SQLException, ): ResponseEntity&lt;ErrorResponse&gt;</ID>
     <ID>TooManyFunctions:GlobalExceptionHandler.kt:GlobalExceptionHandler</ID>
   </CurrentIssues>
 </SmellBaseline>

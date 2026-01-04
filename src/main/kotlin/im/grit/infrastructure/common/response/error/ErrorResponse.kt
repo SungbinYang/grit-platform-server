@@ -2,14 +2,13 @@ package im.grit.infrastructure.common.response.error
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import im.grit.infrastructure.exception.ExceptionCode
-import org.springframework.http.HttpStatus
 import org.springframework.validation.BindingResult
 import java.time.LocalDateTime
 import java.time.ZoneId
 
 data class ErrorResponse(
     val message: String,
-    val status: HttpStatus,
+    val status: Int,
     val code: String,
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     val errors: List<ValidationError> = emptyList(),
@@ -37,7 +36,7 @@ data class ErrorResponse(
         fun of(exceptionCode: ExceptionCode): ErrorResponse {
             return ErrorResponse(
                 message = exceptionCode.message,
-                status = exceptionCode.status,
+                status = exceptionCode.status.value(),
                 code = exceptionCode.code,
             )
         }
@@ -45,7 +44,7 @@ data class ErrorResponse(
         fun of(exceptionCode: ExceptionCode, message: String): ErrorResponse {
             return ErrorResponse(
                 message = message,
-                status = exceptionCode.status,
+                status = exceptionCode.status.value(),
                 code = exceptionCode.code,
             )
         }
@@ -53,7 +52,7 @@ data class ErrorResponse(
         fun of(exceptionCode: ExceptionCode, bindingResult: BindingResult): ErrorResponse {
             return ErrorResponse(
                 message = exceptionCode.message,
-                status = exceptionCode.status,
+                status = exceptionCode.status.value(),
                 code = exceptionCode.code,
                 errors = ValidationError.of(bindingResult),
             )

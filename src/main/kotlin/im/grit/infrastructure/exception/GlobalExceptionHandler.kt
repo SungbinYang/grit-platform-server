@@ -68,6 +68,22 @@ class GlobalExceptionHandler {
 
     /**
      * INVALID_REQUEST_PARAMETER (C400-01) 처리
+     * 잘못된 인자 제공 시 발생
+     */
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(
+        e: IllegalArgumentException,
+    ): ResponseEntity<ErrorResponse> {
+        log.warn("잘못된 인자: ", e)
+        val response = ErrorResponse.of(
+            GlobalExceptionCode.INVALID_REQUEST_PARAMETER,
+            e.message ?: "잘못된 요청 파라미터입니다.",
+        )
+        return ResponseEntity(response, GlobalExceptionCode.INVALID_REQUEST_PARAMETER.status)
+    }
+
+    /**
+     * INVALID_REQUEST_PARAMETER (C400-01) 처리
      * 바인딩 실패 시 발생
      */
     @ExceptionHandler(BindException::class)
@@ -80,51 +96,6 @@ class GlobalExceptionHandler {
             "바인딩에 실패하였습니다.",
         )
         return ResponseEntity(response, GlobalExceptionCode.INVALID_REQUEST_PARAMETER.status)
-    }
-
-    /**
-     * INVALID_INPUT_FORMAT (C400-04) 처리
-     * 메소드 인자 타입 불일치 시 발생
-     */
-    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
-    fun handleMethodArgumentTypeMismatchException(
-        e: MethodArgumentTypeMismatchException,
-    ): ResponseEntity<ErrorResponse> {
-        log.error("메소드 인자 타입 불일치: ", e)
-        val response = ErrorResponse.of(
-            GlobalExceptionCode.INVALID_INPUT_FORMAT,
-            "요청 파라미터 형식이 올바르지 않습니다.",
-        )
-        return ResponseEntity(response, GlobalExceptionCode.INVALID_INPUT_FORMAT.status)
-    }
-
-    /**
-     * REQUEST_SIZE_EXCEEDED (C400-06) 처리
-     * 파일 업로드 크기 초과 시 발생
-     */
-    @ExceptionHandler(MaxUploadSizeExceededException::class)
-    fun handleMaxUploadSizeExceededException(
-        e: MaxUploadSizeExceededException,
-    ): ResponseEntity<ErrorResponse> {
-        log.error("파일 업로드 크기 초과: ", e)
-        val response = ErrorResponse.of(
-            GlobalExceptionCode.REQUEST_SIZE_EXCEEDED,
-            "파일 크기가 제한을 초과했습니다.",
-        )
-        return ResponseEntity(response, GlobalExceptionCode.REQUEST_SIZE_EXCEEDED.status)
-    }
-
-    /**
-     * BUSINESS_RULE_VIOLATION (C422-03) 처리
-     * 비즈니스 규칙 위반 시 발생
-     */
-    @ExceptionHandler(BusinessException::class)
-    fun handleBusinessException(
-        e: BusinessException,
-    ): ResponseEntity<ErrorResponse> {
-        log.error("비즈니스 예외: ", e)
-        val response = ErrorResponse.of(e.exceptionCode, e.message)
-        return ResponseEntity(response, e.exceptionCode.status)
     }
 
     /**
@@ -161,19 +132,19 @@ class GlobalExceptionHandler {
     }
 
     /**
-     * UNSUPPORTED_MEDIA_TYPE (C400-07) 처리
-     * 지원하지 않는 미디어 타입 요청 시 발생
+     * INVALID_INPUT_FORMAT (C400-04) 처리
+     * 메소드 인자 타입 불일치 시 발생
      */
-    @ExceptionHandler(HttpMediaTypeNotSupportedException::class)
-    fun handleHttpMediaTypeNotSupportedException(
-        e: HttpMediaTypeNotSupportedException,
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    fun handleMethodArgumentTypeMismatchException(
+        e: MethodArgumentTypeMismatchException,
     ): ResponseEntity<ErrorResponse> {
-        log.error("지원하지 않는 미디어 타입: ", e)
+        log.error("메소드 인자 타입 불일치: ", e)
         val response = ErrorResponse.of(
-            GlobalExceptionCode.UNSUPPORTED_MEDIA_TYPE,
-            "지원하지 않는 미디어 타입입니다.",
+            GlobalExceptionCode.INVALID_INPUT_FORMAT,
+            "요청 파라미터 형식이 올바르지 않습니다.",
         )
-        return ResponseEntity(response, GlobalExceptionCode.UNSUPPORTED_MEDIA_TYPE.status)
+        return ResponseEntity(response, GlobalExceptionCode.INVALID_INPUT_FORMAT.status)
     }
 
     /**
@@ -193,6 +164,51 @@ class GlobalExceptionHandler {
     }
 
     /**
+     * REQUEST_SIZE_EXCEEDED (C400-06) 처리
+     * 파일 업로드 크기 초과 시 발생
+     */
+    @ExceptionHandler(MaxUploadSizeExceededException::class)
+    fun handleMaxUploadSizeExceededException(
+        e: MaxUploadSizeExceededException,
+    ): ResponseEntity<ErrorResponse> {
+        log.error("파일 업로드 크기 초과: ", e)
+        val response = ErrorResponse.of(
+            GlobalExceptionCode.REQUEST_SIZE_EXCEEDED,
+            "파일 크기가 제한을 초과했습니다.",
+        )
+        return ResponseEntity(response, GlobalExceptionCode.REQUEST_SIZE_EXCEEDED.status)
+    }
+
+    /**
+     * BUSINESS_RULE_VIOLATION (C422-03) 처리
+     * 비즈니스 규칙 위반 시 발생
+     */
+    @ExceptionHandler(BusinessException::class)
+    fun handleBusinessException(
+        e: BusinessException,
+    ): ResponseEntity<ErrorResponse> {
+        log.error("비즈니스 예외: ", e)
+        val response = ErrorResponse.of(e.exceptionCode, e.message)
+        return ResponseEntity(response, e.exceptionCode.status)
+    }
+
+    /**
+     * UNSUPPORTED_MEDIA_TYPE (C400-07) 처리
+     * 지원하지 않는 미디어 타입 요청 시 발생
+     */
+    @ExceptionHandler(HttpMediaTypeNotSupportedException::class)
+    fun handleHttpMediaTypeNotSupportedException(
+        e: HttpMediaTypeNotSupportedException,
+    ): ResponseEntity<ErrorResponse> {
+        log.error("지원하지 않는 미디어 타입: ", e)
+        val response = ErrorResponse.of(
+            GlobalExceptionCode.UNSUPPORTED_MEDIA_TYPE,
+            "지원하지 않는 미디어 타입입니다.",
+        )
+        return ResponseEntity(response, GlobalExceptionCode.UNSUPPORTED_MEDIA_TYPE.status)
+    }
+
+    /**
      * UNAUTHORIZED_RESOURCE_OWNER (A401-01) 처리
      * 인증 실패 시 발생
      */
@@ -206,38 +222,6 @@ class GlobalExceptionHandler {
             "인증에 실패했습니다.",
         )
         return ResponseEntity(response, GlobalExceptionCode.UNAUTHORIZED_RESOURCE_OWNER.status)
-    }
-
-    /**
-     * INVALID_CREDENTIALS (A401-04) 처리
-     * 잘못된 인증 정보 제공 시 발생
-     */
-    @ExceptionHandler(BadCredentialsException::class)
-    fun handleBadCredentialsException(
-        e: BadCredentialsException,
-    ): ResponseEntity<ErrorResponse> {
-        log.error("잘못된 인증 정보: ", e)
-        val response = ErrorResponse.of(
-            GlobalExceptionCode.INVALID_CREDENTIALS,
-            "아이디 또는 비밀번호가 일치하지 않습니다.",
-        )
-        return ResponseEntity(response, GlobalExceptionCode.INVALID_CREDENTIALS.status)
-    }
-
-    /**
-     * TOKEN_SIGNATURE_INVALID (A401-06) 처리
-     * 토큰 서명이 유효하지 않을 때 발생
-     */
-    @ExceptionHandler(TokenSignatureException::class)
-    fun handleTokenSignatureException(
-        e: TokenSignatureException,
-    ): ResponseEntity<ErrorResponse> {
-        log.error("토큰 서명 무효: ", e)
-        val response = ErrorResponse.of(
-            GlobalExceptionCode.TOKEN_SIGNATURE_INVALID,
-            "토큰 서명이 유효하지 않습니다.",
-        )
-        return ResponseEntity(response, GlobalExceptionCode.TOKEN_SIGNATURE_INVALID.status)
     }
 
     /**
@@ -277,6 +261,22 @@ class GlobalExceptionHandler {
     }
 
     /**
+     * INVALID_CREDENTIALS (A401-04) 처리
+     * 잘못된 인증 정보 제공 시 발생
+     */
+    @ExceptionHandler(BadCredentialsException::class)
+    fun handleBadCredentialsException(
+        e: BadCredentialsException,
+    ): ResponseEntity<ErrorResponse> {
+        log.error("잘못된 인증 정보: ", e)
+        val response = ErrorResponse.of(
+            GlobalExceptionCode.INVALID_CREDENTIALS,
+            "아이디 또는 비밀번호가 일치하지 않습니다.",
+        )
+        return ResponseEntity(response, GlobalExceptionCode.INVALID_CREDENTIALS.status)
+    }
+
+    /**
      * MISSING_TOKEN (A401-05) 처리
      * 토큰 누락 시 발생
      */
@@ -293,35 +293,19 @@ class GlobalExceptionHandler {
     }
 
     /**
-     * ACCESS_LIMIT_EXCEEDED (A403-03) 처리
-     * 계정 잠금 시 발생
+     * TOKEN_SIGNATURE_INVALID (A401-06) 처리
+     * 토큰 서명이 유효하지 않을 때 발생
      */
-    @ExceptionHandler(LockedException::class)
-    fun handleLockedException(
-        e: LockedException,
+    @ExceptionHandler(TokenSignatureException::class)
+    fun handleTokenSignatureException(
+        e: TokenSignatureException,
     ): ResponseEntity<ErrorResponse> {
-        log.error("계정 잠금: ", e)
+        log.error("토큰 서명 무효: ", e)
         val response = ErrorResponse.of(
-            GlobalExceptionCode.ACCESS_LIMIT_EXCEEDED,
-            "접근 제한 횟수를 초과했습니다.",
+            GlobalExceptionCode.TOKEN_SIGNATURE_INVALID,
+            "토큰 서명이 유효하지 않습니다.",
         )
-        return ResponseEntity(response, GlobalExceptionCode.ACCESS_LIMIT_EXCEEDED.status)
-    }
-
-    /**
-     * INSUFFICIENT_PERMISSIONS (A403-02) 처리
-     * 불충분한 인증 시 발생
-     */
-    @ExceptionHandler(InsufficientAuthenticationException::class)
-    fun handleInsufficientAuthenticationException(
-        e: InsufficientAuthenticationException,
-    ): ResponseEntity<ErrorResponse> {
-        log.error("불충분한 인증: ", e)
-        val response = ErrorResponse.of(
-            GlobalExceptionCode.INSUFFICIENT_PERMISSIONS,
-            "인증 정보가 없거나 불충분합니다.",
-        )
-        return ResponseEntity(response, GlobalExceptionCode.INSUFFICIENT_PERMISSIONS.status)
+        return ResponseEntity(response, GlobalExceptionCode.TOKEN_SIGNATURE_INVALID.status)
     }
 
     /**
@@ -342,6 +326,22 @@ class GlobalExceptionHandler {
 
     /**
      * INSUFFICIENT_PERMISSIONS (A403-02) 처리
+     * 불충분한 인증 시 발생
+     */
+    @ExceptionHandler(InsufficientAuthenticationException::class)
+    fun handleInsufficientAuthenticationException(
+        e: InsufficientAuthenticationException,
+    ): ResponseEntity<ErrorResponse> {
+        log.error("불충분한 인증: ", e)
+        val response = ErrorResponse.of(
+            GlobalExceptionCode.INSUFFICIENT_PERMISSIONS,
+            "인증 정보가 없거나 불충분합니다.",
+        )
+        return ResponseEntity(response, GlobalExceptionCode.INSUFFICIENT_PERMISSIONS.status)
+    }
+
+    /**
+     * INSUFFICIENT_PERMISSIONS (A403-02) 처리
      * 계정 비활성화 시 발생
      */
     @ExceptionHandler(DisabledException::class)
@@ -354,6 +354,22 @@ class GlobalExceptionHandler {
             "비활성화된 계정입니다.",
         )
         return ResponseEntity(response, GlobalExceptionCode.INSUFFICIENT_PERMISSIONS.status)
+    }
+
+    /**
+     * ACCESS_LIMIT_EXCEEDED (A403-03) 처리
+     * 계정 잠금 시 발생
+     */
+    @ExceptionHandler(LockedException::class)
+    fun handleLockedException(
+        e: LockedException,
+    ): ResponseEntity<ErrorResponse> {
+        log.error("계정 잠금: ", e)
+        val response = ErrorResponse.of(
+            GlobalExceptionCode.ACCESS_LIMIT_EXCEEDED,
+            "접근 제한 횟수를 초과했습니다.",
+        )
+        return ResponseEntity(response, GlobalExceptionCode.ACCESS_LIMIT_EXCEEDED.status)
     }
 
     /**
@@ -437,22 +453,6 @@ class GlobalExceptionHandler {
     }
 
     /**
-     * RESOURCE_CONFLICT (C409-01) 처리
-     * 리소스 상태 충돌 시 발생
-     */
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(
-        e: IllegalArgumentException,
-    ): ResponseEntity<ErrorResponse> {
-        log.error("리소스 충돌: ", e)
-        val response = ErrorResponse.of(
-            GlobalExceptionCode.RESOURCE_CONFLICT,
-            "리소스 충돌이 발생했습니다.",
-        )
-        return ResponseEntity(response, GlobalExceptionCode.RESOURCE_CONFLICT.status)
-    }
-
-    /**
      * CONCURRENT_MODIFICATION (C409-02) 처리
      * 낙관적 락킹 실패 시 발생
      */
@@ -470,8 +470,9 @@ class GlobalExceptionHandler {
     }
 
     /**
-     * VERSION_CONFLICT (C409-03) 처리
-     * 버전 충돌 시 발생
+     * SQLException 처리
+     * 40001: 직렬화 실패 → CONCURRENT_MODIFICATION
+     * 23000: 무결성 제약 위반 → DATA_INTEGRITY_VIOLATION
      */
     @ExceptionHandler(SQLException::class)
     fun handleSQLException(
@@ -479,14 +480,24 @@ class GlobalExceptionHandler {
     ): ResponseEntity<ErrorResponse> {
         val sqlState = e.sqlState
 
-        if (sqlState == "23000" || sqlState == "40001") {
-            log.error("버전 충돌: ", e)
+        if (sqlState == "40001") {
+            log.error("동시 수정 충돌: ", e)
             val response = ErrorResponse.of(
-                GlobalExceptionCode.VERSION_CONFLICT,
-                "리소스 버전 충돌이 발생했습니다.",
+                GlobalExceptionCode.CONCURRENT_MODIFICATION,
+                "동시 수정으로 인한 충돌이 발생했습니다.",
             )
-            return ResponseEntity(response, GlobalExceptionCode.VERSION_CONFLICT.status)
+            return ResponseEntity(response, GlobalExceptionCode.CONCURRENT_MODIFICATION.status)
         }
+
+        if (sqlState == "23000") {
+            log.error("무결성 제약 위반: ", e)
+            val response = ErrorResponse.of(
+                GlobalExceptionCode.DATA_INTEGRITY_VIOLATION,
+                "데이터 무결성 위반이 발생했습니다.",
+            )
+            return ResponseEntity(response, GlobalExceptionCode.DATA_INTEGRITY_VIOLATION.status)
+        }
+
         return handleDatabaseException(e)
     }
 
@@ -549,7 +560,7 @@ class GlobalExceptionHandler {
         log.error("비즈니스 규칙 위반: ", e)
         val response = ErrorResponse.of(
             GlobalExceptionCode.BUSINESS_RULE_VIOLATION,
-            e.message,
+            e.message ?: GlobalExceptionCode.BUSINESS_RULE_VIOLATION.message,
         )
         return ResponseEntity(response, GlobalExceptionCode.BUSINESS_RULE_VIOLATION.status)
     }
@@ -602,6 +613,38 @@ class GlobalExceptionHandler {
     }
 
     /**
+     * UNEXPECTED_ERROR (S500-04) 처리
+     * IllegalStateException 처리
+     */
+    @ExceptionHandler(IllegalStateException::class)
+    fun handleIllegalStateException(
+        e: IllegalStateException,
+    ): ResponseEntity<ErrorResponse> {
+        log.error("잘못된 상태: ", e)
+        val response = ErrorResponse.of(
+            GlobalExceptionCode.UNEXPECTED_ERROR,
+            "예상치 못한 오류가 발생했습니다.",
+        )
+        return ResponseEntity(response, GlobalExceptionCode.UNEXPECTED_ERROR.status)
+    }
+
+    /**
+     * UNEXPECTED_ERROR (S500-04) 처리
+     * 예상치 못한 오류 발생
+     */
+    @ExceptionHandler(RuntimeException::class)
+    fun handleRuntimeException(
+        e: RuntimeException,
+    ): ResponseEntity<ErrorResponse> {
+        log.error("예상치 못한 런타임 오류: ", e)
+        val response = ErrorResponse.of(
+            GlobalExceptionCode.UNEXPECTED_ERROR,
+            "예상치 못한 오류가 발생했습니다.",
+        )
+        return ResponseEntity(response, GlobalExceptionCode.UNEXPECTED_ERROR.status)
+    }
+
+    /**
      * FILE_PROCESSING_ERROR (S500-05) 처리
      * 파일 처리 오류 시 발생
      */
@@ -650,6 +693,22 @@ class GlobalExceptionHandler {
     }
 
     /**
+     * MAINTENANCE_MODE (S503-02) 처리
+     * 시스템 유지보수 모드일 때 발생
+     */
+    @ExceptionHandler(MaintenanceModeException::class)
+    fun handleMaintenanceModeException(
+        e: MaintenanceModeException,
+    ): ResponseEntity<ErrorResponse> {
+        log.warn("유지보수 모드: {}", e.message)
+        val response = ErrorResponse.of(
+            GlobalExceptionCode.MAINTENANCE_MODE,
+            e.message,
+        )
+        return ResponseEntity(response, GlobalExceptionCode.MAINTENANCE_MODE.status)
+    }
+
+    /**
      * RATE_LIMIT_EXCEEDED (S503-03) 처리
      * 요청 비율 제한 초과
      */
@@ -666,22 +725,6 @@ class GlobalExceptionHandler {
     }
 
     /**
-     * UNEXPECTED_ERROR (S500-04) 처리
-     * IllegalStateException 처리
-     */
-    @ExceptionHandler(IllegalStateException::class)
-    fun handleIllegalStateException(
-        e: IllegalStateException,
-    ): ResponseEntity<ErrorResponse> {
-        log.error("잘못된 상태: ", e)
-        val response = ErrorResponse.of(
-            GlobalExceptionCode.UNEXPECTED_ERROR,
-            "예상치 못한 오류가 발생했습니다.",
-        )
-        return ResponseEntity(response, GlobalExceptionCode.UNEXPECTED_ERROR.status)
-    }
-
-    /**
      * TIMEOUT (G504-01) 처리
      * 리소스 접근 시간 초과 시 발생
      */
@@ -695,38 +738,6 @@ class GlobalExceptionHandler {
             "외부 서비스 응답 시간이 초과되었습니다.",
         )
         return ResponseEntity(response, GlobalExceptionCode.TIMEOUT.status)
-    }
-
-    /**
-     * UNEXPECTED_ERROR (S500-04) 처리
-     * 예상치 못한 오류 발생
-     */
-    @ExceptionHandler(RuntimeException::class)
-    fun handleRuntimeException(
-        e: RuntimeException,
-    ): ResponseEntity<ErrorResponse> {
-        log.error("예상치 못한 런타임 오류: ", e)
-        val response = ErrorResponse.of(
-            GlobalExceptionCode.UNEXPECTED_ERROR,
-            "예상치 못한 오류가 발생했습니다.",
-        )
-        return ResponseEntity(response, GlobalExceptionCode.UNEXPECTED_ERROR.status)
-    }
-
-    /**
-     * MAINTENANCE_MODE (S503-02) 처리
-     * 시스템 유지보수 모드일 때 발생
-     */
-    @ExceptionHandler(MaintenanceModeException::class)
-    fun handleMaintenanceModeException(
-        e: MaintenanceModeException,
-    ): ResponseEntity<ErrorResponse> {
-        log.warn("유지보수 모드: {}", e.message)
-        val response = ErrorResponse.of(
-            GlobalExceptionCode.MAINTENANCE_MODE,
-            e.message,
-        )
-        return ResponseEntity(response, GlobalExceptionCode.MAINTENANCE_MODE.status)
     }
 
     /**
