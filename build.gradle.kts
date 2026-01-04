@@ -1,3 +1,6 @@
+import dev.detekt.gradle.Detekt
+import dev.detekt.gradle.DetektCreateBaselineTask
+
 plugins {
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.spring") version "2.3.0"
@@ -5,6 +8,8 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("org.asciidoctor.jvm.convert") version "4.0.5"
     kotlin("plugin.jpa") version "2.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
+    id("dev.detekt") version "2.0.0-alpha.1"
 }
 
 group = "im.grit"
@@ -49,6 +54,31 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+configurations.named("detekt") {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains.kotlin") {
+            useVersion("2.2.20")
+        }
+    }
+}
+
+detekt {
+    baseline = file("config/detekt/baseline.xml")
+    buildUponDefaultConfig = true
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = "24"
+    reports {
+        checkstyle.required.set(true)
+        checkstyle.outputLocation.set(file("build/reports/detekt/detekt.xml"))
+    }
+}
+
+tasks.withType<DetektCreateBaselineTask>().configureEach {
+    jvmTarget = "24"
 }
 
 kotlin {
