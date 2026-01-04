@@ -14,6 +14,11 @@ logging:
     org.hibernate.SQL: off
     org.hibernate.orm.jdbc.bind: off
 
+app:
+  security:
+    cors:
+      max-age: 3600
+    password-pepper: ${PASSWORD_PEPPER}
 ---
 spring:
   config:
@@ -40,6 +45,11 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
 
+app:
+  security:
+    allowed-origins:
+      - http://localhost:5173
+
 ---
 spring:
   config:
@@ -62,3 +72,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+app:
+  security:
+    password-pepper: ${PASSWORD_PEPPER}
+    allowed-origins:
+      - https://grit.im

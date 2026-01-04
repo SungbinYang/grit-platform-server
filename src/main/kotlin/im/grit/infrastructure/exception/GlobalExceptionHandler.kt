@@ -560,7 +560,7 @@ class GlobalExceptionHandler {
         log.error("비즈니스 규칙 위반: ", e)
         val response = ErrorResponse.of(
             GlobalExceptionCode.BUSINESS_RULE_VIOLATION,
-            e.message ?: GlobalExceptionCode.BUSINESS_RULE_VIOLATION.message,
+            e.message,
         )
         return ResponseEntity(response, GlobalExceptionCode.BUSINESS_RULE_VIOLATION.status)
     }
