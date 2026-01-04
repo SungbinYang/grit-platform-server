@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "im.grit"
-version = "0.1.0"
+version = "0.1.1"
 description = "grit-platform-server"
 
 java {
